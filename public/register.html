@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Clarity - Register</title>
+    <link rel="stylesheet" href="/src/logreg.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/src/supabaseClient.js"></script>
+</head>
+
+<body>
+    <div class="follow-box left">
+        <svg viewBox="0 0 100 100" class="spiral-svg" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 50 
+                m-30,0
+                a30,30 0 1,1 60,0
+                a20,20 0 1,0 -40,0
+                a10,10 0 1,1 20,0" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" />
+        </svg>
+    </div>
+
+    <div class="follow-box right">
+        <svg viewBox="0 0 100 100" class="spiral-svg" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 50 
+                m-30,0
+                a30,30 0 1,1 60,0
+                a20,20 0 1,0 -40,0
+                a10,10 0 1,1 20,0" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" />
+        </svg>
+    </div>
+
+    <!-- Wave SVG -->
+    <div id="wave-container">
+        <svg id="wave"></svg>
+    </div>
+
+    <h1>Register at Clarity</h1>
+    <div type="box">
+        <p>Create your account</p>
+        <input id="username" type="text" placeholder="Username" />
+        <input id="email" type="email" placeholder="Email" />
+        <input id="password" type="password" placeholder="Password" />
+        <button id="register-btn" type="button">Register</button>
+        <p id="msg" style="color:#ffd700; margin-top:10px;"></p>
+        <p>
+            Already have an account?
+            <a href="login.html">Login here</a>
+        </p>
+    </div>
+
+    <div class="footer">
+        <p>Made with ❤️ by Mxlsc</p>
+        <p>© 2025 Clarity. All rights reserved.</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/wavify@1.0.0/dist/wavify.js"></script>
+    <script>
+        window.addEventListener("load", () => {
+            // Cria a onda no fundo
+            const svg = document.getElementById('wave');
+            if (svg) {
+                svg.innerHTML = '<path></path>';
+                wavify(svg.querySelector('path'), {
+                    color: 'rgba(255, 215, 0, 0.3)'
+                });
+            }
+        });
+    </script>
+    <script src="/src/register.js"></script>
+    <script src="/src/follow.js"></script>
+</body>
+
+</html>

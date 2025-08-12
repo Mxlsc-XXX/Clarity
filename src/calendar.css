@@ -1,0 +1,27 @@
+/* calendar.css */
+.font-calendar {
+    font-family: 'Pacifico', cursive;
+}
+
+[data-content="calendar"] .bg-white\/80 {
+    background: linear-gradient(120deg, #fffbe6 80%, #e7cba9 100%);
+    box-shadow: 0 2px 16px 0 #e7cba9cc;
+    border: 1.5px solid #bfa07433;
+    animation: fade-in 0.7s;
+}
+
+#calendar-list li {
+    margin-bottom: 2px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+#add-event {
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.5px;
+    transition: transform 0.15s;
+}
+
+#add-event.btn-press {
+    transform: scale(0.96);
+}

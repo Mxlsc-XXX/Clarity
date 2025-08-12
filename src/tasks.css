@@ -1,0 +1,32 @@
+/* tasks.css */
+.font-tasks {
+    font-family: 'Quicksand', sans-serif;
+}
+
+[data-content="tasks"] .bg-white\/80 {
+    background: linear-gradient(120deg, #fffbe6 80%, #e7cba9 100%);
+    box-shadow: 0 2px 16px 0 #e7cba9cc;
+    border: 1.5px solid #bfa07433;
+    animation: fade-in 0.7s;
+}
+
+#tasks-list li {
+    transition: background 0.2s;
+    border-radius: 6px;
+    margin-bottom: 2px;
+}
+
+#tasks-list li input[type="checkbox"]:checked+span {
+    text-decoration: line-through;
+    color: #bfa074;
+}
+
+#add-task {
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.5px;
+    transition: transform 0.15s;
+}
+
+#add-task.btn-press {
+    transform: scale(0.96);
+}

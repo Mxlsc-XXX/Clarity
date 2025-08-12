@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Clarity - Panel</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+    <link rel="stylesheet" href="/src/clarity-animations.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Google Fonts para estilos diferenciados -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Montserrat:wght@700&family=Quicksand:wght@500;700&family=Fira+Code:wght@400;700&family=Pacifico&display=swap"
+        rel="stylesheet" />
+</head>
+
+<body class="h-screen flex">
+    <!-- Sidebar -->
+    <nav class="w-64 p-6 border-r border-gray-300 flex flex-col">
+        <h1 class="text-2xl font-bold mb-8" id="sidebar-title">CLARITY</h1>
+        <ul class="flex flex-col gap-4 text-gray-700">
+            <li><a href="#" data-tab="dashboard" class="font-semibold">Dashboard</a></li>
+            <li><a href="#" data-tab="workspace" class="font-semibold">Workspace</a></li>
+            <li><a href="#" data-tab="notes" class="font-semibold">Notes</a></li>
+            <li><a href="#" data-tab="projects" class="font-semibold">Projects</a></li>
+            <li><a href="#" data-tab="tasks" class="font-semibold">Tasks</a></li>
+            <li><a href="#" data-tab="mindmaps" class="font-semibold">Mind Maps</a></li>
+            <li><a href="#" data-tab="calendar" class="font-semibold">Calendar</a></li>
+            <li><a href="#" data-tab="files" class="font-semibold">Files</a></li>
+            <li><a href="#" data-tab="settings" class="font-semibold">Settings</a></li>
+        </ul>
+
+    </nav>
+
+    <!-- Conteúdo principal -->
+    <main class="flex-1 flex flex-col">
+
+        <!-- Header -->
+        <header class="flex justify-between items-center bg-white p-4 border-b border-gray-300">
+            <div>
+                <h2 class="text-xl font-semibold" id="welcome-message">Hi there, user</h2>
+            </div>
+            <div class="flex gap-2 items-center">
+                <button id="theme-toggle" title="Alternar tema">🧋☕</button>
+                <button id="logout-btn">Exit</button>
+            </div>
+        </header>
+
+        <!-- Área de conteúdo -->
+        <section class="flex-1 p-6 overflow-auto">
+
+            <!-- Dashboard -->
+            <div class="tab-content font-dashboard" data-content="dashboard">
+                <h3 class="text-lg font-semibold mb-4">Your Data</h3>
+                <div id="user-info" class="bg-white p-6 rounded shadow">
+                    <p><strong>Email:</strong> <span id="user-email"></span></p>
+                    <p><strong>Name:</strong> <span id="user-name"></span></p>
+                </div>
+            </div>
+
+            <!-- Workspace -->
+            <div class="tab-content hidden font-workspace" data-content="workspace">
+                <h3 class="text-lg font-semibold mb-4">Workspace</h3>
+                <div class="bg-white/80 rounded-lg p-6 shadow pop-in animate-fast flex flex-col gap-4">
+                    <p class="text-base">Organize ideias, links, listas ou qualquer coisa livremente.</p>
+                    <ul class="list-disc ml-6 text-sm text-gray-700">
+                        <li>Arraste e solte arquivos ou imagens aqui (em breve!)</li>
+                        <li>Crie listas rápidas de tarefas</li>
+                        <li>Adicione notas soltas ou links úteis</li>
+                    </ul>
+                    <textarea id="workspace-draft"
+                        class="w-full h-32 p-3 border border-gray-300 rounded bg-[#fffbe6] text-[#7c5c3b] focus:outline-none focus:ring-2 focus:ring-[#bfa074] transition"
+                        placeholder="Digite livremente..."></textarea>
+                    <button id="workspace-save"
+                        class="self-end bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition pop-in">Salvar
+                        Rascunho</button>
+                    <div id="workspace-feedback" class="text-xs text-green-700 mt-2 hidden">Rascunho salvo!</div>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="tab-content hidden font-notes" data-content="notes">
+                <h3 class="text-lg font-semibold mb-4">Suas Notas</h3>
+
+                <!-- Barra de ferramentas -->
+                <div class="flex flex-col md:flex-row md:items-center gap-4 mb-4">
+                    <input id="search-notes" type="text" placeholder="Pesquisar..."
+                        class="flex-1 text-black p-2 border border-gray-300 rounded" />
+                    <input id="filter-keyword" type="text" placeholder="Filtrar por palavra-chave..."
+                        class="text-black p-2 border border-gray-300 rounded" />
+                    <button id="create-note" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Nova
+                        Nota</button>
+                </div>
+
+                <!-- Lista de notas -->
+                <div id="notes-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <!-- Cards das notas inseridos via JS -->
+                </div>
+            </div>
+
+            <!-- Modal de Criar/Editar Nota -->
+            <div id="note-modal"
+                class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50 hidden">
+                <div class="text-black w-full max-w-2xl p-6 rounded-lg shadow-lg relative">
+                    <h3 id="modal-title" class="text-xl font-bold mb-4">Nova Nota</h3>
+                    <input id="note-title" type="text" placeholder="Título"
+                        class="w-full mb-2 p-2 border border-gray-300 rounded" />
+                    <input id="note-category" type="text" placeholder="Categoria"
+                        class="w-full mb-2 p-2 border border-gray-300 rounded" />
+                    <textarea id="note-editor" class="w-full h-40 p-2 border border-gray-300 rounded resize-none mb-2"
+                        placeholder="Escreva em markdown..."></textarea>
+                    <div id="note-preview"
+                        class="p-2 border border-gray-300 rounded bg-gray-100 overflow-y-auto h-40 text-black mb-4">
+                    </div>
+                    <div class="flex justify-end gap-2">
+                        <button id="cancel-note"
+                            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Cancelar</button>
+                        <button id="save-note"
+                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Salvar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projects -->
+            <div class="tab-content hidden font-projects" data-content="projects">
+                <h3 class="text-lg font-semibold mb-4">Projects</h3>
+                <div class="bg-white/80 rounded-lg p-6 shadow pop-in animate-fast flex flex-col gap-4">
+                    <p class="text-base">Gerencie seus projetos:</p>
+                    <ul class="list-disc ml-6 text-sm text-gray-700">
+                        <li>Projeto Exemplo: <span class="font-bold">Clarity App</span> <span
+                                class="ml-2 text-xs bg-yellow-200 text-yellow-900 px-2 py-1 rounded">Em andamento</span>
+                        </li>
+                        <li>Projeto Exemplo: <span class="font-bold">Landing Page Café</span> <span
+                                class="ml-2 text-xs bg-green-200 text-green-900 px-2 py-1 rounded">Concluído</span></li>
+                    </ul>
+                    <button
+                        class="self-end bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition pop-in">Novo
+                        Projeto</button>
+                </div>
+            </div>
+
+            <!-- Tasks -->
+            <div class="tab-content hidden font-tasks" data-content="tasks">
+                <h3 class="text-lg font-semibold mb-4">Tasks</h3>
+                <div class="bg-white/80 rounded-lg p-6 shadow pop-in animate-fast flex flex-col gap-4">
+                    <p class="text-base">Tarefas do dia:</p>
+                    <ul id="tasks-list" class="list-disc ml-6 text-sm text-gray-700">
+                        <li><input type="checkbox" checked class="mr-2 align-middle">Finalizar animação do modal</li>
+                        <li><input type="checkbox" class="mr-2 align-middle">Adicionar exportação de notas</li>
+                        <li><input type="checkbox" class="mr-2 align-middle">Testar responsividade</li>
+                    </ul>
+                    <div class="flex gap-2">
+                        <input id="task-input" type="text"
+                            class="flex-1 p-2 border border-gray-300 rounded bg-[#fffbe6] text-[#7c5c3b] focus:outline-none focus:ring-2 focus:ring-[#bfa074] transition"
+                            placeholder="Nova tarefa...">
+                        <button id="add-task"
+                            class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mind Maps -->
+            <div class="tab-content hidden font-mindmaps" data-content="mindmaps">
+                <h3 class="text-lg font-semibold mb-4">Mind Maps</h3>
+                <div class="bg-white/80 rounded-lg p-6 shadow pop-in animate-fast flex flex-col gap-4">
+                    <p class="text-base">Visualize conexões de ideias:</p>
+                    <div class="flex flex-col items-center">
+                        <svg width="220" height="120" viewBox="0 0 220 120" fill="none"
+                            xmlns="http://www.w3.org/2000/svg" class="mb-2">
+                            <circle cx="110" cy="60" r="30" fill="#e7cba9" stroke="#bfa074" stroke-width="3" />
+                            <text x="110" y="65" text-anchor="middle" fill="#7c5c3b" font-size="1.1rem"
+                                font-weight="bold">IDEIA</text>
+                            <line x1="110" y1="30" x2="60" y2="20" stroke="#bfa074" stroke-width="2" />
+                            <circle cx="60" cy="20" r="12" fill="#fffbe6" stroke="#bfa074" stroke-width="2" />
+                            <text x="60" y="25" text-anchor="middle" fill="#7c5c3b" font-size="0.9rem">A</text>
+                            <line x1="110" y1="30" x2="160" y2="20" stroke="#bfa074" stroke-width="2" />
+                            <circle cx="160" cy="20" r="12" fill="#fffbe6" stroke="#bfa074" stroke-width="2" />
+                            <text x="160" y="25" text-anchor="middle" fill="#7c5c3b" font-size="0.9rem">B</text>
+                        </svg>
+                        <span class="text-xs text-gray-500">(Arraste para criar conexões em breve!)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar -->
+            <div class="tab-content hidden font-calendar" data-content="calendar">
+                <h3 class="text-lg font-semibold mb-4">Calendar</h3>
+                <div class="bg-white/80 rounded-lg p-6 shadow pop-in animate-fast flex flex-col gap-4">
+                    <p class="text-base">Próximos eventos:</p>
+                    <ul id="calendar-list" class="list-disc ml-6 text-sm text-gray-700">
+                        <li>Reunião do projeto Clarity - <span class="text-xs text-gray-500">Amanhã, 10h</span></li>
+                        <li>Entrega de tarefas - <span class="text-xs text-gray-500">Sexta, 18h</span></li>
+                    </ul>
+                    <div class="flex gap-2">
+                        <input id="calendar-input" type="text"
+                            class="flex-1 p-2 border border-gray-300 rounded bg-[#fffbe6] text-[#7c5c3b] focus:outline-none focus:ring-2 focus:ring-[#bfa074] transition"
+                            placeholder="Novo evento...">
+                        <button id="add-event"
+                            class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Files -->
+            <div class="tab-content hidden font-files" data-content="files">
+                <h3 class="text-lg font-semibold mb-4">Files</h3>
+                <div class="bg-white/80 rounded-lg p-6 shadow pop-in animate-fast flex flex-col gap-4">
+                    <p class="text-base">Gerencie seus arquivos:</p>
+                    <ul id="files-list" class="list-disc ml-6 text-sm text-gray-700">
+                        <li>Arquivo Exemplo.pdf <span
+                                class="ml-2 text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">1.2MB</span></li>
+                        <li>Imagem Café.png <span
+                                class="ml-2 text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">320KB</span></li>
+                    </ul>
+                    <div class="flex gap-2">
+                        <input id="file-input" type="file"
+                            class="flex-1 p-2 border border-gray-300 rounded bg-[#fffbe6] text-[#7c5c3b] focus:outline-none focus:ring-2 focus:ring-[#bfa074] transition"
+                            style="background:#fffbe6;color:#7c5c3b;" />
+                        <button id="add-file"
+                            class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition">Upload</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="tab-content hidden font-settings" data-content="settings">
+                <h3 class="text-lg font-semibold mb-4">Settings</h3>
+                <div class="bg-white/80 rounded-lg p-6 shadow pop-in animate-fast flex flex-col gap-4">
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" id="setting-darkmode" class="accent-[#bfa074]" /> Tema escuro automático
+                    </label>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" id="setting-animations" class="accent-[#bfa074]" checked /> Animações
+                        avançadas
+                    </label>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" id="setting-accessibility" class="accent-[#bfa074]" /> Acessibilidade
+                        extra
+                    </label>
+                    <button id="save-settings"
+                        class="self-end bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition pop-in">Salvar
+                        Configurações</button>
+                    <div id="settings-feedback" class="text-xs text-blue-700 mt-2 hidden">Configurações salvas!</div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Loading screen -->
+        <div id="loading-screen" class="fixed inset-0 bg-opacity-75 flex items-center justify-center z-50 hidden">
+            <div class="follow-box">
+                <svg viewBox="0 0 100 100" class="spiral-svg spin" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 50 
+            m-30,0
+            a30,30 0 1,1 60,0
+            a20,20 0 1,0 -40,0
+            a10,10 0 1,1 20,0" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" />
+                </svg>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/wavify@1.0.0/dist/wavify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="/src/main.js"></script>
+    <script type="module" src="/src/notes.js"></script>
+    <script type="module" src="/src/workspace.js"></script>
+    <script type="module" src="/src/tasks.js"></script>
+    <script type="module" src="/src/calendar.js"></script>
+    <script type="module" src="/src/files.js"></script>
+    <script type="module" src="/src/settings.js"></script>
+    <link rel="stylesheet" href="/src/workspace.css" />
+    <link rel="stylesheet" href="/src/tasks.css" />
+    <link rel="stylesheet" href="/src/calendar.css" />
+    <link rel="stylesheet" href="/src/files.css" />
+    <link rel="stylesheet" href="/src/settings.css" />
+    <script>
+        // QoL: Persistência de aba/tela
+        const tabLinks = document.querySelectorAll('nav ul li a[data-tab]');
+        const tabContents = document.querySelectorAll('.tab-content');
+        function showTab(tab) {
+            tabContents.forEach(tc => tc.classList.add('hidden'));
+            const el = document.querySelector(`.tab-content[data-content="${tab}"]`);
+            if (el) el.classList.remove('hidden');
+            localStorage.setItem('clarity-last-tab', tab);
+        }
+        tabLinks.forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                showTab(link.getAttribute('data-tab'));
+            });
+        });
+        // Restaura última aba
+        window.addEventListener('DOMContentLoaded', () => {
+            const last = localStorage.getItem('clarity-last-tab') || 'dashboard';
+            showTab(last);
+
+            // Corrige filtro de categorias: sempre renderiza todas as notas ao selecionar 'Todas as categorias'
+            const filterSelect = document.getElementById('filter-category');
+            if (filterSelect) {
+                filterSelect.addEventListener('change', () => {
+                    // Usa evento customizado para garantir animação liquify, se notes.js estiver preparado
+                    if (!filterSelect.value) {
+                        if (window.renderNotes) {
+                            window.renderNotes(window.notes, true);
+                        } else {
+                            // fallback: força reload da aba
+                            document.querySelector('a[data-tab="notes"]').click();
+                        }
+                    }
+                });
+            }
+        });
+
+        // QoL: Atalhos de teclado
+        window.addEventListener('keydown', e => {
+            // Nova nota
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'n') {
+                e.preventDefault();
+                document.getElementById('create-note').click();
+            }
+            // Foco busca
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
+                e.preventDefault();
+                const search = document.getElementById('search-notes');
+                if (search) search.focus();
+            }
+            // Salvar nota
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+                const modal = document.getElementById('note-modal');
+                if (modal && !modal.classList.contains('hidden')) {
+                    e.preventDefault();
+                    document.getElementById('save-note').click();
+                }
+            }
+            // Fechar modal com Esc já existe
+        });
+
+        // QoL: Auto-foco no modal de nota (só ao abrir)
+        const noteModalGlobal = document.getElementById('note-modal');
+        function focusTitleOnOpen() {
+            if (!noteModalGlobal.classList.contains('hidden')) {
+                const title = document.getElementById('note-title');
+                if (title) title.focus();
+            }
+        }
+        // Foca só ao abrir (quando remove a classe 'hidden')
+        const observer = new MutationObserver(() => {
+            if (!noteModalGlobal.classList.contains('hidden')) {
+                setTimeout(focusTitleOnOpen, 10);
+            }
+        });
+        observer.observe(noteModalGlobal, { attributes: true, attributeFilter: ['class'] });
+
+        // QoL: Feedback visual ao copiar (tooltip animado)
+        window.addEventListener('DOMContentLoaded', () => {
+            document.body.addEventListener('click', e => {
+                if (e.target && (e.target.textContent === 'Copiar título' || e.target.textContent === 'Copiar conteúdo')) {
+                    const btn = e.target;
+                    let tip = document.createElement('span');
+                    tip.textContent = 'Copiado!';
+                    tip.style.position = 'absolute';
+                    tip.style.background = '#bfa074';
+                    tip.style.color = '#fff';
+                    tip.style.fontSize = '0.85rem';
+                    tip.style.padding = '2px 8px';
+                    tip.style.borderRadius = '6px';
+                    tip.style.left = (btn.offsetLeft + btn.offsetWidth + 8) + 'px';
+                    tip.style.top = (btn.offsetTop - 4) + 'px';
+                    tip.style.zIndex = 9999;
+                    tip.className = 'fade-in';
+                    btn.parentElement.appendChild(tip);
+                    setTimeout(() => {
+                        tip.className = 'fade-out';
+                        setTimeout(() => tip.remove(), 400);
+                    }, 900);
+                }
+            });
+        });
+
+        // QoL: Animação de clique em todos os botões
+        document.body.addEventListener('mousedown', e => {
+            if (e.target.tagName === 'BUTTON') {
+                e.target.classList.add('btn-press');
+            }
+        });
+        document.body.addEventListener('mouseup', e => {
+            if (e.target.tagName === 'BUTTON') {
+                setTimeout(() => e.target.classList.remove('btn-press'), 180);
+            }
+        });
+    </script>
+    <script>
+        // Alternância de tema café com leite (claro) e café tradicional (escuro)
+        const themeBtn = document.getElementById('theme-toggle');
+        function setTheme(theme) {
+            document.body.classList.remove('theme-light', 'theme-dark');
+            document.body.classList.add(theme);
+            localStorage.setItem('clarity-theme', theme);
+            // Atualiza o ícone do botão
+            themeBtn.textContent = theme === 'theme-dark' ? '🧋' : '☕';
+        }
+        // Botão de troca de tema
+        themeBtn.addEventListener('click', () => {
+            const current = document.body.classList.contains('theme-dark') ? 'theme-dark' : 'theme-light';
+            const newTheme = current === 'theme-dark' ? 'theme-light' : 'theme-dark';
+            setTheme(newTheme);
+        });
+        // Ao carregar a página, aplica o tema salvo ou usa preferência do sistema
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('clarity-theme');
+            if (saved) {
+                setTheme(saved);
+            } else {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                setTheme(prefersDark ? 'theme-dark' : 'theme-light');
+            }
+        });
+    </script>
+    </script>
+    <script type="module">
+        // Unifica referência global do modal
+        const noteModal = document.getElementById('note-modal');
+        const createNoteBtn = document.getElementById('create-note');
+        const cancelNoteBtn = document.getElementById('cancel-note');
+        const notesList = document.getElementById('notes-list');
+        // Abrir modal
+        createNoteBtn.addEventListener('click', () => {
+            document.getElementById('modal-title').textContent = 'Nova Nota';
+            document.getElementById('note-title').value = '';
+            document.getElementById('note-category').value = '';
+            document.getElementById('note-editor').value = '';
+            document.getElementById('note-preview').innerHTML = '';
+            noteModal.classList.remove('hidden');
+            noteModal.classList.remove('fade-out');
+            noteModal.classList.add('fade-in');
+        });
+        // Fechar modal
+        cancelNoteBtn.addEventListener('click', () => {
+            noteModal.classList.remove('fade-in');
+            noteModal.classList.add('fade-out');
+            setTimeout(() => noteModal.classList.add('hidden'), 400);
+        });
+        // Fechar modal com ESC
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                noteModal.classList.remove('fade-in');
+                noteModal.classList.add('fade-out');
+                setTimeout(() => noteModal.classList.add('hidden'), 400);
+            }
+        });
+        // Preview Markdown em tempo real
+        const editor = document.getElementById('note-editor');
+        const preview = document.getElementById('note-preview');
+        editor.addEventListener('input', () => {
+            const markdown = editor.value;
+            preview.innerHTML = marked.parse(markdown);
+        });
+
+        // QoL: Scroll suave para nova nota
+        window.addEventListener('clarity-new-note', () => {
+            setTimeout(() => {
+                const first = notesList.querySelector('.note-card');
+                if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 200);
+        });
+
+        // QoL: Animação liquify conectada aos notes (requer ajuste em notes.js)
+        window.addEventListener('clarity-animate-liquify', e => {
+            const { type, card } = e.detail;
+            if (type === 'in') {
+                card.classList.add('liquify-in');
+                card.addEventListener('animationend', () => card.classList.remove('liquify-in'), { once: true });
+            } else if (type === 'out') {
+                card.classList.add('liquify-out');
+                card.addEventListener('animationend', () => card.remove(), { once: true });
+            }
+        });
+
+        // QoL: Acessibilidade - aumentar fonte com atalho Ctrl+Plus/Ctrl+Minus
+        let fontScale = 1;
+        window.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '=')) {
+                e.preventDefault();
+                fontScale = Math.min(fontScale + 0.1, 1.5);
+                document.body.style.fontSize = fontScale + 'em';
+            }
+            if ((e.ctrlKey || e.metaKey) && (e.key === '-' || e.key === '_')) {
+                e.preventDefault();
+                fontScale = Math.max(fontScale - 0.1, 0.7);
+                document.body.style.fontSize = fontScale + 'em';
+            }
+        });
+
+        // QoL: Animação de entrada para cards ao abrir aba de notas
+        document.querySelector('a[data-tab="notes"]').addEventListener('click', () => {
+            setTimeout(() => {
+                notesList.querySelectorAll('.note-card').forEach((card, i) => {
+                    card.classList.add('pop-in');
+                    setTimeout(() => card.classList.remove('pop-in'), 400 + i * 30);
+                });
+            }, 200);
+        });
+
+        // QoL: Feedback visual para ações importantes (salvar, deletar)
+        window.addEventListener('clarity-action', e => {
+            const msg = e.detail && e.detail.msg ? e.detail.msg : 'Ação realizada!';
+            let toast = document.createElement('div');
+            toast.textContent = msg;
+            toast.style.position = 'fixed';
+            toast.style.bottom = '2.5rem';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.background = '#bfa074';
+            toast.style.color = '#fff';
+            toast.style.padding = '10px 28px';
+            toast.style.borderRadius = '12px';
+            toast.style.fontWeight = 'bold';
+            toast.style.fontSize = '1.1rem';
+            toast.style.zIndex = 9999;
+            toast.className = 'fade-in';
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.className = 'fade-out';
+                setTimeout(() => toast.remove(), 400);
+            }, 1200);
+        });
+    </script>
+    <!-- JS das abas extras agora está separado em arquivos próprios em src/ -->
+
+</body>
+
+</html>

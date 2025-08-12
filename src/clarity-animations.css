@@ -1,0 +1,387 @@
+/* --- ANIMAÇÕES AVANÇADAS CLARITY --- */
+
+/* Modal de leitura: aproximação + flip */
+.modal-zoom-in {
+    animation: modalZoomIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+    transform-origin: 50% 60%;
+    backface-visibility: hidden;
+}
+
+@keyframes modalZoomIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.7) rotateY(30deg);
+        filter: blur(6px);
+    }
+
+    60% {
+        opacity: 1;
+        filter: blur(0.5px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) rotateY(0deg);
+        filter: none;
+    }
+}
+
+/* Modal de leitura: saída com flip reverso */
+.modal-zoom-out {
+    animation: modalZoomOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    transform-origin: 50% 60%;
+    backface-visibility: hidden;
+}
+
+@keyframes modalZoomOut {
+    0% {
+        opacity: 1;
+        transform: scale(1) rotateY(0deg);
+        filter: none;
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.7) rotateY(-30deg);
+        filter: blur(6px);
+    }
+}
+
+/* Card liquify (dissolver) ao sumir do filtro */
+.liquify-out {
+    animation: liquifyOut 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes liquifyOut {
+    0% {
+        opacity: 1;
+        filter: none;
+        transform: scaleY(1) skewX(0deg);
+    }
+
+    40% {
+        filter: blur(2px) brightness(1.1);
+    }
+
+    70% {
+        opacity: 0.7;
+        filter: blur(6px) brightness(1.2);
+        transform: scaleY(0.7) skewX(10deg);
+    }
+
+    100% {
+        opacity: 0;
+        filter: blur(12px) brightness(1.3);
+        transform: scaleY(0.2) skewX(25deg);
+    }
+}
+
+/* Card liquify (aparecer) */
+.liquify-in {
+    animation: liquifyIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes liquifyIn {
+    0% {
+        opacity: 0;
+        filter: blur(12px) brightness(1.3);
+        transform: scaleY(0.2) skewX(25deg);
+    }
+
+    40% {
+        filter: blur(6px) brightness(1.2);
+        transform: scaleY(0.7) skewX(10deg);
+    }
+
+    70% {
+        opacity: 0.7;
+        filter: blur(2px) brightness(1.1);
+    }
+
+    100% {
+        opacity: 1;
+        filter: none;
+        transform: scaleY(1) skewX(0deg);
+    }
+}
+
+/* Modal de leitura de nota: zoom in/out */
+.note-modal-in {
+    animation: noteModalIn 0.38s cubic-bezier(0.4, 0, 0.2, 1) both;
+    transform-origin: 50% 60%;
+    backface-visibility: hidden;
+}
+
+@keyframes noteModalIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.82) translateY(32px);
+        filter: blur(8px);
+    }
+
+    60% {
+        opacity: 1;
+        filter: blur(0.5px);
+        transform: scale(1.04) translateY(-8px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: none;
+    }
+}
+
+.note-modal-out {
+    animation: noteModalOut 0.28s cubic-bezier(0.4, 0, 0.2, 1) both;
+    transform-origin: 50% 60%;
+    backface-visibility: hidden;
+}
+
+@keyframes noteModalOut {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: none;
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.82) translateY(32px);
+        filter: blur(8px);
+    }
+}
+
+/* Instruções de uso:
+ - Para modal de leitura: adicione .modal-zoom-in ao abrir e .modal-zoom-out ao fechar.
+ - Para cards de nota: ao filtrar, adicione .liquify-out nos cards que vão sumir e .liquify-in nos que vão aparecer.
+*/
+/* Animations for Clarity UI - clarity-animations.css */
+
+/* Fade in/out */
+.fade-in {
+    animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.fade-out {
+    animation: fadeOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: none;
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+}
+
+/* Pop (scale) */
+.pop-in {
+    animation: popIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+
+    80% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Slide in from left */
+.slide-in-left {
+    animation: slideInLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Slide in from right */
+.slide-in-right {
+    animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Slide in from bottom */
+.slide-in-up {
+    animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Button press */
+.btn-press:active {
+    animation: btnPress 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes btnPress {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(0.93);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Card hover pop */
+.card-pop:hover {
+    animation: cardPop 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes cardPop {
+    0% {
+        transform: scale(1);
+    }
+
+    60% {
+        transform: scale(1.04);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Modal open/close */
+.modal-open {
+    animation: modalOpen 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes modalOpen {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(32px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-close {
+    animation: modalClose 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes modalClose {
+    from {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(0.95) translateY(32px);
+    }
+}
+
+/* List item appear */
+.list-appear {
+    animation: listAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes listAppear {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Wave SVG animation */
+#wave {
+    animation: waveMove 8s linear infinite alternate;
+}
+
+@keyframes waveMove {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-40px);
+    }
+}
+
+/* Utility: animate fast/slow */
+.animate-fast {
+    animation-duration: 0.2s !important;
+}
+
+.animate-slow {
+    animation-duration: 1.2s !important;
+}
+
+:root,
+body,
+* {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+:root {
+    transition: all 0.4s ease;
+}

@@ -1,0 +1,172 @@
+/* Café com leite minimalista */
+html,
+body {
+  min-height: 100vh;
+  background: linear-gradient(120deg, #f7e9d2 0%, #e7cba9 100%);
+  color: #5c4631;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+h1 {
+  margin-bottom: 2.5rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #7c5c3b;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #bfa074 40%, #fffbe6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  /* fallback para navegadores que não suportam background-clip:text */
+}
+
+div[type="box"] {
+  background: rgba(255, 255, 255, 0.85);
+  padding: 2.2rem 2.5rem;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px 0 rgba(180, 150, 110, 0.10);
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  border: 1.5px solid #e7cba9;
+  align-items: stretch;
+}
+
+div[type="box"] p {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #7c5c3b;
+  margin-bottom: 0.5rem;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+  padding: 0.9rem 1.1rem;
+  border-radius: 8px;
+  border: 1.5px solid #e7cba9;
+  font-size: 1rem;
+  color: #5c4631;
+  background: #f7f3ed;
+  transition: border 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus {
+  border: 1.5px solid #bfa074;
+  box-shadow: 0 0 0 2px #f7e9d2;
+}
+
+button[type="submit"],
+button[type="button"] {
+  margin-top: 0.5rem;
+  padding: 0.9rem 0;
+  background: linear-gradient(90deg, #e7cba9 60%, #fffbe6 100%);
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #7c5c3b;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+  box-shadow: 0 2px 8px 0 rgba(180, 150, 110, 0.08);
+}
+
+button[type="submit"]:hover,
+button[type="button"]:hover {
+  background: linear-gradient(90deg, #fffbe6 0%, #e7cba9 100%);
+  box-shadow: 0 4px 16px 0 rgba(180, 150, 110, 0.13);
+  transform: translateY(-2px) scale(1.03);
+}
+
+button[type="submit"]:active,
+button[type="button"]:active {
+  background: #e7cba9;
+  transform: scale(0.98);
+}
+
+div[type="box"] a {
+  margin-top: 1rem;
+  color: #bfa074;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+  display: block;
+  transition: color 0.2s;
+}
+
+div[type="box"] a:hover {
+  color: #7c5c3b;
+  text-decoration: underline;
+}
+
+.footer {
+  margin-top: 2.5rem;
+  font-size: 0.95rem;
+  color: #bfa074;
+  text-align: center;
+}
+
+.follow-box {
+  position: absolute;
+  width: 80px;
+  height: 450px;
+  background: linear-gradient(145deg, #f7e9d2 60%, #e7cba9 100%);
+  border: 2px solid #e7cba9;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(180, 150, 110, 0.13),
+    inset 0 0 25px rgba(255, 255, 255, 0.10);
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+  z-index: 1;
+  transform-style: preserve-3d;
+  overflow: visible;
+}
+
+.follow-box.left {
+  left: 5vw;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.follow-box.right {
+  right: 5vw;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.follow-box .spiral-svg {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  pointer-events: none;
+  filter: drop-shadow(0 0 2px #e7cba9);
+}
+
+#wave-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  background: none;
+  overflow: hidden;
+}
+
+#wave-container svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}

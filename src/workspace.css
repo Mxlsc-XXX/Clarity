@@ -1,0 +1,37 @@
+/* workspace.css */
+.font-workspace {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+[data-content="workspace"] .bg-white\/80 {
+    background: linear-gradient(120deg, #fffbe6 80%, #e7cba9 100%);
+    box-shadow: 0 2px 16px 0 #e7cba9cc;
+    border: 1.5px solid #bfa07433;
+    animation: fade-in 0.7s;
+}
+
+#workspace-draft {
+    background: #fffbe6;
+    color: #7c5c3b;
+    border-radius: 8px;
+    border: 1.5px solid #bfa07444;
+    transition: box-shadow 0.2s;
+}
+
+#workspace-draft:focus {
+    box-shadow: 0 0 0 2px #bfa07477;
+}
+
+#workspace-save {
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.5px;
+    transition: transform 0.15s;
+}
+
+#workspace-save.btn-press {
+    transform: scale(0.96);
+}
+
+#workspace-feedback {
+    animation: fade-in 0.5s;
+}
